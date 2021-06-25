@@ -1,0 +1,2 @@
+Do not place sensitive files, keys, objects in this folder. 
+It is a public repository.
