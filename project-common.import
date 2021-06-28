@@ -7,7 +7,7 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<AssemblyVersion>9999.0.2.0</AssemblyVersion>
 	</PropertyGroup>
-	
+
   	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
 	</PropertyGroup>
