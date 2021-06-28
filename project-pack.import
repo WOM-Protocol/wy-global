@@ -12,6 +12,10 @@
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 
+	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
+	</ItemGroup>
+
 	<Target Name="AfterPack" AfterTargets="Pack">
 		<Exec Command="dotnet nuget push $(PackageOutputPath)*$(Version).nupkg --source Local" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"/>
 	</Target>
