@@ -3,21 +3,32 @@
   
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.cs;.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<EmbedAllSources>true</EmbedAllSources>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>9999.0.1-local</Version>
+		<Version>0.0.0-unknown</Version>
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
+	<!-- do not pack regular builds, only pack a build when version was specified -->
+	<PropertyGroup Condition="'$(Version.Contains(`unknown`))' == 'false'">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
 	</ItemGroup>
 
-	<Target Name="AfterPack" AfterTargets="Pack">
-		<Exec Command="dotnet nuget push $(PackageOutputPath)*$(Version).nupkg --source Local" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"/>
+	<!-- only afterpack a build when version was specified -->
+	<Target Name="AfterPack" AfterTargets="Pack" Condition="'$(Version.Contains(`unknown`))' == 'false'">
+		<Exec Command="dotnet nuget push $(PackageOutputPath)$(ProjectName).$(Version).nupkg --source Local" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"/>
+	</Target>
+
+	<Target Name="CleanUpPack" AfterTargets="AfterPack">
+		<Message Text="Cleaning up $(ProjectName).$(Version).nupkg "/>
+		<Delete Files="$(PackageOutputPath)$(ProjectName).$(Version).nupkg " />
+		<Delete Files="$(PackageOutputPath)$(ProjectName).$(Version).symbols.nupkg " />
 	</Target>
 
 </Project>
